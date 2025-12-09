@@ -116,6 +116,8 @@ import org.springframework.util.StringUtils;
  * @see #addBeanPostProcessor
  * @see #getBean
  * @see #resolveDependency
+ *
+ * 主要是对bean 注册后的处理
  */
 @SuppressWarnings("serial")
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
@@ -161,6 +163,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private final Map<Class<?>, Object> resolvableDependencies = new ConcurrentHashMap<>(16);
 
 	/** Map of bean definition objects, keyed by bean name. */
+	//todo bean定义信息最终被注册到的位置
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
 
 	/** Map from bean name to merged BeanDefinitionHolder. */
@@ -1027,6 +1030,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
+			//todo 添加beanDefinition
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {

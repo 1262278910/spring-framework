@@ -1,0 +1,11 @@
+description = "Spring Reach"
+
+apply plugin: "kotlin"
+
+dependencies {
+	api(project(":spring-core"))
+	api(project(":spring-beans"))
+	api(project(":spring-context"))
+}
+
+// 关键修复点：声明资源目录

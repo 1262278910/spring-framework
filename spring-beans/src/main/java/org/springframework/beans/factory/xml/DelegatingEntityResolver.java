@@ -83,6 +83,7 @@ public class DelegatingEntityResolver implements EntityResolver {
 			throws SAXException, IOException {
 
 		if (systemId != null) {
+			//todo dtd是spring2.x前使用的声明文件格式，功能比较简单
 			if (systemId.endsWith(DTD_SUFFIX)) {
 				return this.dtdResolver.resolveEntity(publicId, systemId);
 			}

@@ -1,0 +1,1 @@
+D:\WorkSpace\githubProject\springSource\spring-framework\sreach\build\classes\java\main\com\reach\springTest\SimpleBean.class;D:\WorkSpace\githubProject\springSource\spring-framework\sreach\build\classes\java\main\com\reach\springTest\SpringTest.class

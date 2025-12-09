@@ -141,6 +141,7 @@ public abstract class BeanUtils {
 	 */
 	public static <T> T instantiateClass(Class<T> clazz) throws BeanInstantiationException {
 		Assert.notNull(clazz, "Class must not be null");
+		//todo 接口不能被实例化
 		if (clazz.isInterface()) {
 			throw new BeanInstantiationException(clazz, "Specified class is an interface");
 		}

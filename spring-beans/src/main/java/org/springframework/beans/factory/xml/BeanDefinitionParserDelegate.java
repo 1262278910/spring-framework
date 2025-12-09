@@ -81,6 +81,8 @@ import org.springframework.util.xml.DomUtils;
  * @since 2.0
  * @see ParserContext
  * @see DefaultBeanDefinitionDocumentReader
+ *
+ *  （Bean定义解析器委托） 定义解析 element的方法
  */
 public class BeanDefinitionParserDelegate {
 
@@ -412,9 +414,12 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		//todo 解析id属性
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+		//todo 解析name属性
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
+		//todo 分割name属性
 		List<String> aliases = new ArrayList<>();
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
@@ -434,11 +439,13 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		//todo 转化为 beanDefinition
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
+						//todo 若beanName为空，则按spring默认规则生成beanName
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
@@ -503,26 +510,44 @@ public class BeanDefinitionParserDelegate {
 		this.parseState.push(new BeanEntry(beanName));
 
 		String className = null;
+		//todo 解析class属性
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
+		//todo 解析parent属性
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
+			//todo 该方法作用是创建用于承载属性的实例 GenericBeanDefinition
+			/*BeanDefinition 是一个接口，在 Spring 中存在三种实现： RootBeanDefinition、 ChildBeanDefinition 以及 GenericBeanDefinition
+			三种实现均继承了 AbstractBeanDefinition ，其中BeanDefinition 是配置文件＜bean＞元素标签在容器中的内部表示形式。
+			＜bean＞元素标签拥有 class 、 scope 、 lazy-init 等配置属性，
+			BeanDefinition 则提供了相应的 beanClass、 scope、 lazyI nit 属性， BeanD巳finition 和＜bean＞中的属性是－一对应的。
+			其中 RootBeanDefinition 是最常用的实现类，它对应一般性的＜bean＞元素标签，
+			GenericBeanDefinition 是自 2.5 版本以后新加入的 bean 文件配置属性定义类，是一站式服务类。*/
+
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
+			//todo 解析bean的各种属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			//todo 解析bean的描述信息
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			//todo 解析bean的元数据 ?
 			parseMetaElements(ele, bd);
+			//todo 解析bean的lookup-method ?
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			//todo 解析bean的replaced-method ?
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			//todo 解析bean的构造函数参数
 			parseConstructorArgElements(ele, bd);
+			//todo 解析 property子元素
 			parsePropertyElements(ele, bd);
+			//todo 解析 qualifier子元素
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());

@@ -40,6 +40,8 @@ import org.springframework.lang.Nullable;
  *
  * @author Juergen Hoeller
  * @since 2.5.1
+ *
+ * 集成 DefaultSingletonBeanRegistry ，增加对factorybean的特殊处理
  */
 public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
 

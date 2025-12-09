@@ -38,6 +38,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 03.11.2003
  * @see org.springframework.context.support.AbstractApplicationContext#getBeanFactory()
+ *
+ *  (可配置可列表化Bean工厂)  beanfactory 配置清单，指定忽略类型及接口
  */
 public interface ConfigurableListableBeanFactory
 		extends ListableBeanFactory, AutowireCapableBeanFactory, ConfigurableBeanFactory {

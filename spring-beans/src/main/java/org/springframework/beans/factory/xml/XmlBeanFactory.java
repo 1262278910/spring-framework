@@ -49,11 +49,14 @@ import org.springframework.core.io.Resource;
  * @see XmlBeanDefinitionReader
  * @deprecated as of Spring 3.1 in favor of {@link DefaultListableBeanFactory} and
  * {@link XmlBeanDefinitionReader}
+ *
+ * 扩展 DefaultListableBeanFactory ，增加从 xml获取bean, 增加了XmlBeanDefinitionReader
  */
 @Deprecated
 @SuppressWarnings({"serial", "all"})
 public class XmlBeanFactory extends DefaultListableBeanFactory {
 
+	//todo 从这里实例化 XmlBeanDefinitionReader时, 就已经制定了 BeanDefinitionRegistry 为 DefaultListableBeanFactory的子类 XmlBeanFactory
 	private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
 
 
@@ -76,6 +79,7 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 */
 	public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {
 		super(parentBeanFactory);
+		//this.setParentBeanFactory(parentBeanFactory); 上面是在构造链中设置 parentBeanFactory，这行是调用自己的方法设置，二者不同
 		this.reader.loadBeanDefinitions(resource);
 	}
 

@@ -81,7 +81,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	private XmlReaderContext readerContext;
 
 	@Nullable
-	private BeanDefinitionParserDelegate delegate;
+	private BeanDefinitionParserDelegate delegate; // bean 委托解析器
 
 
 	/**
@@ -93,6 +93,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Override
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
+		//todo 提取root
 		doRegisterBeanDefinitions(doc.getDocumentElement());
 	}
 
@@ -125,9 +126,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// the new (child) delegate with a reference to the parent for fallback purposes,
 		// then ultimately reset this.delegate back to its original (parent) reference.
 		// this behavior emulates a stack of delegates without actually necessitating one.
+		//todo 获取专门处理解析器
 		BeanDefinitionParserDelegate parent = this.delegate;
 		this.delegate = createDelegate(getReaderContext(), root, parent);
 
+		//todo 解析 profile(定义在xml的beans节点)属性，用于区分多个环境
 		if (this.delegate.isDefaultNamespace(root)) {
 			String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 			if (StringUtils.hasText(profileSpec)) {
@@ -145,8 +148,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		//todo 解析前处理 留给子类实现  面向对象: 一个类要么是面向继承设计, 要么用final修饰, 这里用的是模板方法设计
 		preProcessXml(root);
+		//todo 解析 ========================> parseBeanDefinitions
 		parseBeanDefinitions(root, this.delegate);
+		//todo 解析后处理 留给子类实现 模板方法
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -166,6 +172,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		//todo 判断是否为spring默认命名空间, 决定使用默认解析器还是自定义解析器
 		if (delegate.isDefaultNamespace(root)) {
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
@@ -176,6 +183,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						//todo 自定义解析 需要用户自己实现一些接口配置, 都需要实现哪些接口？
 						delegate.parseCustomElement(ele);
 					}
 				}
@@ -187,15 +195,19 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
+		// import标签的处理
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
 		}
+		// alias标签的处理
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 			processAliasRegistration(ele);
 		}
+		//todo bean标签的处理
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}
+		// beans标签的处理
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
 			doRegisterBeanDefinitions(ele);
@@ -303,11 +315,14 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * and registering it with the registry.
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
+		//todo 1. BeanDefinitionParserDelegate进行元素解析，并将bean信息封装到 BeanDefinitionHolder
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
+			//todo 2.若存在自定义标签 解析自定义标签
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
+				//todo 3.注册bean定义信息
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {
@@ -315,6 +330,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
 			// Send registration event.
+			//todo 4. 发出响应事件 通知监听器该bean已经注册完成
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

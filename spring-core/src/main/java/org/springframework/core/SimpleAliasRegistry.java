@@ -40,6 +40,7 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @author Qimiao Chen
  * @since 2.5.2
+ *  使用 mao 作为缓存， 并对AliasRegistry接口进行实现
  */
 public class SimpleAliasRegistry implements AliasRegistry {
 

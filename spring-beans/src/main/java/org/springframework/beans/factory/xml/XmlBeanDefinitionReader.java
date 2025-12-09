@@ -120,6 +120,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	private DocumentLoader documentLoader = new DefaultDocumentLoader();
 
+	//todo  将 xml中的声明 url 转化为本地工厂中的文件，避免下载慢
 	@Nullable
 	private EntityResolver entityResolver;
 
@@ -127,6 +128,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	private final XmlValidationModeDetector validationModeDetector = new XmlValidationModeDetector();
 
+	//使用了线程隔离 创建变量副本
 	private final ThreadLocal<Set<EncodedResource>> resourcesCurrentlyBeingLoaded =
 			new NamedThreadLocal<Set<EncodedResource>>("XML bean definition resources currently being loaded"){
 				@Override
@@ -270,6 +272,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				this.entityResolver = new ResourceEntityResolver(resourceLoader);
 			}
 			else {
+				//todo  spring使用 DelegatingEntityResolver为EntityResolver的实现类
 				this.entityResolver = new DelegatingEntityResolver(getBeanClassLoader());
 			}
 		}
@@ -307,6 +310,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	@Override
 	public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
+		//todo 对 resource 进行封装，考虑 resource 存在编码要求的情况
 		return loadBeanDefinitions(new EncodedResource(resource));
 	}
 
@@ -331,10 +335,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
+			//todo 使用 sax 读取 xml文件，转化为 inputSource
 			InputSource inputSource = new InputSource(inputStream);
 			if (encodedResource.getEncoding() != null) {
 				inputSource.setEncoding(encodedResource.getEncoding());
 			}
+			//todo 核心部分 ========================> doLoadBeanDefinitions
 			return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 		}
 		catch (IOException ex) {
@@ -387,7 +393,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			//todo 加载xml 获取 document信息  ==========> doLoadDocument
 			Document doc = doLoadDocument(inputSource, resource);
+			//todo 根据document 注册bean信息
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -429,6 +437,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
+		//todo 先验证xml 验证格式，然后读取
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
 				getValidationModeForResource(resource), isNamespaceAware());
 	}
@@ -441,6 +450,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * mode, even when something other than {@link #VALIDATION_AUTO} was set.
 	 * @see #detectValidationMode
 	 */
+	//todo 获取xml文档的验证模式
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
 		if (validationModeToUse != VALIDATION_AUTO) {
@@ -506,8 +516,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+
+		//todo 使用 DefaultBeanDefinitionDocumentReader 实例化 BeanDefinitionDocumentReader
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		//todo doc参数是通过 doLoadDocument 方法加载的
+		//todo bean定义信息 注册  ==================> registerBeanDefinitions
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
@@ -519,6 +533,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #setDocumentReaderClass
 	 */
 	protected BeanDefinitionDocumentReader createBeanDefinitionDocumentReader() {
+		//todo spring实例化类方法
 		return BeanUtils.instantiateClass(this.documentReaderClass);
 	}
 

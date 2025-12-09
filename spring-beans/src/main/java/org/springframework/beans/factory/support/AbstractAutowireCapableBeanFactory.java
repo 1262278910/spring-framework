@@ -120,6 +120,8 @@ import org.springframework.util.StringUtils;
  * @see RootBeanDefinition
  * @see DefaultListableBeanFactory
  * @see BeanDefinitionRegistry
+ *
+ *   (具有自动注入功能的抽象BeanFactory) 综合 AbstractBeanFactory 并对 AbstractAutowireCapableBeanFactory 进行实现
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
@@ -174,6 +176,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	public AbstractAutowireCapableBeanFactory() {
 		super();
+		//todo 自动装配是忽略给定的依赖接口 也就是实现了这三个接口的 bean不会被自动装配
 		ignoreDependencyInterface(BeanNameAware.class);
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);

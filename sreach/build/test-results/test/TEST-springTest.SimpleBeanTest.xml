@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="springTest.SimpleBeanTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-09T03:13:00" hostname="LAPTOP-EM14344E" time="48.718">
+  <properties/>
+  <testcase name="SimpleBeanTestOne()" classname="springTest.SimpleBeanTest" time="48.718"/>
+  <system-out><![CDATA[reach666=============
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

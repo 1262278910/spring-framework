@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
  * @author Sam Brannen
  * @since 2.0
  */
+//todo  xml 检测委托
 public class XmlValidationModeDetector {
 
 	/**
@@ -100,10 +101,12 @@ public class XmlValidationModeDetector {
 				if (!StringUtils.hasText(content)) {
 					continue;
 				}
+				//todo 判断是否具有 DOCTYPE， 有就是DTD 没有就是 XSD
 				if (hasDoctype(content)) {
 					isDtdValidated = true;
 					break;
 				}
+				//todo 读取到 > 开始符号 验证模式一定在开始符号前
 				if (hasOpeningTag(content)) {
 					// End of meaningful data...
 					break;
