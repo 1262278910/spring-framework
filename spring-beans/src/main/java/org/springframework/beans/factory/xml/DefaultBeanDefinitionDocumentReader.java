@@ -174,12 +174,14 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
 		//todo 判断是否为spring默认命名空间, 决定使用默认解析器还是自定义解析器
 		if (delegate.isDefaultNamespace(root)) {
+			//todo 获取根节点下的子节点 循环处理所有bean
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
+						//todo 默认解析方式 =========================================> parseDefaultElement
 						parseDefaultElement(ele, delegate);
 					}
 					else {

@@ -4,5 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <bean id="SimpleBean" class="com.reach.springTest.SimpleBean"></bean>
+    <bean id="SimpleBean" class="com.reach.springTest.SimpleBean">
+		<meta key="testStr" value="reachjb666"/>
+	</bean>
 </beans>
