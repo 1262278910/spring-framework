@@ -150,7 +150,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 		//todo 解析前处理 留给子类实现  面向对象: 一个类要么是面向继承设计, 要么用final修饰, 这里用的是模板方法设计
 		preProcessXml(root);
-		//todo 解析 ========================> parseBeanDefinitions
+		//todo 解析是准备参数 为了后续实例化bean的时候使用 ========================> parseBeanDefinitions
 		parseBeanDefinitions(root, this.delegate);
 		//todo 解析后处理 留给子类实现 模板方法
 		postProcessXml(root);

@@ -17,9 +17,9 @@ public class SpringTest {
 	public static void main(String[] args) {
 
 
-		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("config.xml"));
-		SimpleBean bean = (SimpleBean) bf.getBean("SimpleBean");
-		System.out.println(bean.getName());
+//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("config.xml"));
+//		SimpleBean bean = (SimpleBean) bf.getBean("SimpleBean");
+//		System.out.println(bean.getName());
 
 
 		//使用beanfactory和 context都能获取 bean 有什么区别？

@@ -19,7 +19,7 @@ public class SimpleBeanTest {
 	@Test
 	public void SimpleBeanTestOne(){
 
-		//使用beanfactory和 context都能获取 bean 有什么区别呢？: XmlBeanFactory已经过时
+		//XmlBeanFactory 和  ApplicationContext 的区别: XmlBeanFactory已经过时
 		// context 是整个 spring的上下文环境 所有的 @Component、@Service、@Controller 等都注册在这里。
 //		ApplicationContext context = new ClassPathXmlApplicationContext("config.xml");
 //		SimpleBean myBean2 = context.getBean(SimpleBean.class);
@@ -28,7 +28,7 @@ public class SimpleBeanTest {
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("config.xml"));
 		SimpleBean myBean = factory.getBean(SimpleBean.class);
 		System.out.println(myBean.getName());
-
+		System.out.println(myBean.getColors());
 
 
 	}

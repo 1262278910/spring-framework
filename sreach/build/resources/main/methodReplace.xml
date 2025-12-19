@@ -4,6 +4,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="testChangeMethod" class="com.reach.springTest.test.replaceMethod.TestChangeMethod">
+			<!--				替换原有方法        -->
 				<replaced-method name="changeMe" replacer="replacer"></replaced-method>
 
 	</bean>

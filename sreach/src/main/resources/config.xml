@@ -5,6 +5,20 @@
 
 
     <bean id="SimpleBean" class="com.reach.springTest.SimpleBean">
-		<meta key="testStr" value="reachjb666"/>
+		<meta key="testStr" value="reach666"/>
+		<constructor-arg index="0" name="name" type="java.lang.String" value="reach7777"/>
+		<constructor-arg index="1" name="age" type="java.lang.Integer" value="18"/>
+		<constructor-arg index="2" name="colors" type="java.util.List">
+			<list>
+				<value>green</value>
+				<value>yelloy</value>
+			</list>
+		</constructor-arg>
+		<property name="nums">
+			<list>
+				<value>126</value>
+				<value>777</value>
+			</list>
+		</property>
 	</bean>
 </beans>
